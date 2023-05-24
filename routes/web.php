@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MyPlaceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +18,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/exp/', function () {
-    return 'Hello World!';
-});
+Route::get('/exp/', [MyPlaceController::class, 'hello']);
+Route::get('/about/', [MyPlaceController::class, 'cv']);
