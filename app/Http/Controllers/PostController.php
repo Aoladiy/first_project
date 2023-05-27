@@ -8,12 +8,10 @@ use Illuminate\Routing\Route;
 
 class PostController extends Controller
 {
-    function dump()
+    function showPosts()
     {
-        $posts = Post::all('content', 'title');
-        foreach ($posts as $post) {
-            dump($post->title);
-        }
+        $posts = Post::all();
+        return view('posts', compact('posts'));
     }
 
     function create()
