@@ -8,51 +8,62 @@ use Illuminate\Routing\Route;
 
 class PostController extends Controller
 {
-    function showPosts()
+    function index()
     {
         $posts = Post::all();
-        return view('posts', compact('posts'));
+        return view('posts/posts', compact('posts'));
     }
 
     function create()
     {
-        $posts_to_create = [
-            [
-                'title' => 'title from function create in PostController',
-                'content' => 'content from function create in PostController',
-                'image' => 'image from function create in PostController.png',
-                'likes' => 12,
-                'is_published' => 1,
-            ],
-            [
-                'title' => 'second title from function create in PostController',
-                'content' => 'second content from function create in PostController',
-                'image' => 'second image from function create in PostController.png',
-                'likes' => 122,
-                'is_published' => 1,
-            ]
-        ];
-        foreach ($posts_to_create as $post_to_create) {
-            Post::create($post_to_create);
-            dump($post_to_create);
-        }
+        return view('posts/create');
     }
 
-    function update()
+    function store()
     {
-        $post_to_update = Post::find(1);
-        $post_to_update->update([
-            'title' => 'updated title',
-            'content' => 'updated content'
+        $data = request()->validate([
+            'id' => 'numeric',
+            'title' => 'string',
+            'content' => 'string',
+            'image' => 'string',
+            'likes' => 'numeric',
+            'is_published' => 'boolean',
         ]);
-        dump($post_to_update);
+        Post::create($data);
+        return redirect()->route('posts');
     }
 
-    function delete()
+    function show($post_id)
     {
-        $posts_to_delete = Post::where('id', 1);
-        $posts_to_delete->delete();
-        dump($posts_to_delete);
+        return view('posts.post', ['post' => Post::findOrFail($post_id)]);
+    }
+
+    function edit($post_id)
+    {
+        return view('posts.edit', ['post' => Post::findOrFail($post_id)]);
+    }
+
+    function update($post_id)
+    {
+        $data = request()->validate([
+            'id' => 'numeric',
+            'title' => 'string',
+            'content' => 'string',
+            'image' => 'string',
+            'likes' => 'numeric',
+            'is_published' => 'boolean',
+        ]);
+        if(!array_key_exists('is_published', $data)){
+            $data['is_published'] = 0;
+        }
+        Post::findOrFail($post_id)->update($data);
+        return redirect()->route('postShow', $data['id']);
+    }
+
+    function destroy($post_id)
+    {
+        Post::findOrFail($post_id)->delete();
+        return redirect()->route('posts');
     }
 
     function restore()
