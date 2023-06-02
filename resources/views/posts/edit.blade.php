@@ -24,6 +24,10 @@
                 <label for="likes">Likes</label>
                 <input type="number" class="form-control" name="likes" id="likes" placeholder="likes" value="{{$post->likes}}">
             </div>
+            <div class="mb-3">
+                <label for="category_id">Category id</label>
+                <input type="number" class="form-control" name="category_id" id="category_id" placeholder="category id" value="{{$post->category_id}}">
+            </div>
             <div class="mb-3 form-check">
                 <label class="form-check-label" for="is_published">Is published</label>
                 @if($post->is_published === 1)

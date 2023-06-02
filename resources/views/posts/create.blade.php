@@ -18,9 +18,13 @@
             <div class="mb-3">
                 <input type="number" class="form-control" name="likes" id="likes" placeholder="likes">
             </div>
+            <div class="mb-3">
+                <label for="category_id">Category id</label>
+                <input type="number" class="form-control" name="category_id" id="category_id" placeholder="category id">
+            </div>
             <div class="mb-3 form-check">
                 <label class="form-check-label" for="is_published">Is published</label>
-                <input type="checkbox" class="form-check-input" name="is_published" id="is_published">
+                <input type="checkbox" class="form-check-input" name="is_published" id="is_published" value=1>
             </div>
             <button type="submit" class="btn btn-primary">Create</button>
             <a class="btn btn-primary" href="{{route('posts')}}">Back</a>

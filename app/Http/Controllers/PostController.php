@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
@@ -10,6 +11,11 @@ class PostController extends Controller
 {
     function index()
     {
+//        $post = Post::find(2);
+//        dd($post->category->title);
+
+//        $category = Category::find(1);
+//        dd($category->posts);
         $posts = Post::all();
         return view('posts/posts', compact('posts'));
     }
@@ -22,12 +28,13 @@ class PostController extends Controller
     function store()
     {
         $data = request()->validate([
-            'id' => 'numeric',
+            'id' => 'numeric|nullable',
             'title' => 'string',
             'content' => 'string',
-            'image' => 'string',
-            'likes' => 'numeric',
-            'is_published' => 'boolean',
+            'image' => 'string|nullable',
+            'likes' => 'numeric|nullable',
+            'is_published' => 'boolean|nullable',
+            'category_id' => 'numeric|nullable',
         ]);
         Post::create($data);
         return redirect()->route('posts');
@@ -46,12 +53,13 @@ class PostController extends Controller
     function update($post_id)
     {
         $data = request()->validate([
-            'id' => 'numeric',
+            'id' => 'numeric|nullable',
             'title' => 'string',
             'content' => 'string',
-            'image' => 'string',
-            'likes' => 'numeric',
-            'is_published' => 'boolean',
+            'image' => 'string|nullable',
+            'likes' => 'numeric|nullable',
+            'is_published' => 'boolean|nullable',
+            'category_id' => 'numeric|nullable',
         ]);
         if(!array_key_exists('is_published', $data)){
             $data['is_published'] = 0;

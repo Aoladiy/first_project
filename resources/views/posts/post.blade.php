@@ -7,6 +7,7 @@
             <th scope="col">Title</th>
             <th scope="col">Content</th>
             <th scope="col">Likes</th>
+            <th scope="col">Category id</th>
             <th scope="col">Is published</th>
         </tr>
         </thead>
@@ -16,6 +17,7 @@
             <td>{{$post->title}}</td>
             <td>{{$post->content}}</td>
             <td>{{$post->likes}}</td>
+            <td>{{$post->category_id}}</td>
             <td>{{$post->is_published}}</td>
         </tr>
         </tbody>
