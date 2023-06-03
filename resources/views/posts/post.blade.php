@@ -7,7 +7,8 @@
             <th scope="col">Title</th>
             <th scope="col">Content</th>
             <th scope="col">Likes</th>
-            <th scope="col">Category id</th>
+            <th scope="col">Category</th>
+            <th scope="col">Tags</th>
             <th scope="col">Is published</th>
         </tr>
         </thead>
@@ -17,7 +18,8 @@
             <td>{{$post->title}}</td>
             <td>{{$post->content}}</td>
             <td>{{$post->likes}}</td>
-            <td>{{$post->category_id}}</td>
+            <td>{{$post->category ? $post->category->title : null}}</td>
+            <td>{{$post->tags->pluck('title')->implode(', ')}}</td>
             <td>{{$post->is_published}}</td>
         </tr>
         </tbody>

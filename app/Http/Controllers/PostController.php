@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\PostTag;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
@@ -25,12 +26,15 @@ class PostController extends Controller
 //        dd($tag->posts);
 
         $posts = Post::all();
-        return view('posts/posts', compact('posts'));
+        $categories = Category::all();
+        return view('posts/posts', compact('posts', 'categories'));
     }
 
     function create()
     {
-        return view('posts/create');
+        $categories = Category::all();
+        $tags = Tag::all();
+        return view('posts/create', compact('categories', 'tags'));
     }
 
     function store()
@@ -43,8 +47,21 @@ class PostController extends Controller
             'likes' => 'numeric|nullable',
             'is_published' => 'boolean|nullable',
             'category_id' => 'numeric|nullable',
+            'tags' => '',
         ]);
-        Post::create($data);
+        if (isset($data['tags'])) {
+            $tags = $data['tags'];
+        }
+        unset($data['tags']);
+        $post = Post::create($data);
+        if (isset($tags)) {
+            foreach ($tags as $tag) {
+                PostTag::firstOrCreate([
+                    'tag_id' => $tag,
+                    'post_id' => $post->id,
+                ]);
+            }
+        }
         return redirect()->route('posts');
     }
 
@@ -55,7 +72,10 @@ class PostController extends Controller
 
     function edit($post_id)
     {
-        return view('posts.edit', ['post' => Post::findOrFail($post_id)]);
+        $post = Post::findOrFail($post_id);
+        $categories = Category::all();
+        $tags = Tag::all();
+        return view('posts.edit', compact('post', 'categories', 'tags'));
     }
 
     function update($post_id)
@@ -68,12 +88,16 @@ class PostController extends Controller
             'likes' => 'numeric|nullable',
             'is_published' => 'boolean|nullable',
             'category_id' => 'numeric|nullable',
+            'tags' => '',
         ]);
-        if(!array_key_exists('is_published', $data)){
+        if (!array_key_exists('is_published', $data)) {
             $data['is_published'] = 0;
         }
+        $tags = $data['tags'];
+        unset($data['tags']);
         Post::findOrFail($post_id)->update($data);
-        return redirect()->route('postShow', $data['id']);
+        Post::findOrFail($post_id)->tags()->sync($tags);
+        return redirect()->route('postShow', $post_id);
     }
 
     function destroy($post_id)
@@ -102,7 +126,8 @@ class PostController extends Controller
         dump($post_to_first_or_create->content);
     }
 
-    function updateOrCreate() {
+    function updateOrCreate()
+    {
         $post_to_update_or_create = [
             'title' => 'title from function updateOrCreate in PostController',
             'content' => 'content from function updateOrCreate in PostController',
