@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Post;
-use App\Models\PostTag;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
@@ -13,18 +12,6 @@ class PostController extends Controller
 {
     function index()
     {
-//        $post = Post::find(2);
-//        dd($post->category->title);
-
-//        $category = Category::find(1);
-//        dd($category->posts);
-
-//        $post = Post::findOrFail(1);
-//        dd($post->tags);
-
-//        $tag = Tag::find(1);
-//        dd($tag->posts);
-
         $posts = Post::all();
         $categories = Category::all();
         return view('posts/posts', compact('posts', 'categories'));
@@ -54,14 +41,7 @@ class PostController extends Controller
         }
         unset($data['tags']);
         $post = Post::create($data);
-        if (isset($tags)) {
-            foreach ($tags as $tag) {
-                PostTag::firstOrCreate([
-                    'tag_id' => $tag,
-                    'post_id' => $post->id,
-                ]);
-            }
-        }
+        $post->tags()->attach($tags);
         return redirect()->route('posts');
     }
 
