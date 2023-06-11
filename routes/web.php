@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
-use App\Http\Controllers\PostController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,18 +19,25 @@ Route::get('/about/', [MainController::class, 'about'])->name('about');
 Route::get('/contacts/', [MainController::class, 'contacts'])->name('contacts');
 Route::get('/cv/', [MainController::class, 'cv'])->name('cv');
 
-Route::get('/posts/', [PostController::class, 'index'])->name('posts');
-Route::get('/posts/{post_id}', [PostController::class, 'show'])->name('postShow')->where('post_id', '^[0-9]+$');
-Route::get('/posts/{post_id}/edit/', [PostController::class, 'edit'])->name('postEdit')->where('post_id', '^[0-9]+$');
-Route::post('/posts/', [PostController::class, 'store'])->name('postStore');
-Route::patch('/posts/{post_id}', [PostController::class, 'update'])->name('postUpdate');
-Route::delete('/posts/{post_id}/delete', [PostController::class, 'destroy'])->name('postDelete');
-Route::get('/posts/create/', [PostController::class, 'create'])->name('postCreate');
-Route::get('/posts/update/', [PostController::class, 'update']);
-Route::get('/posts/delete/', [PostController::class, 'delete']);
-Route::get('/posts/restore/', [PostController::class, 'restore']);
-Route::get('/posts/first_or_create', [PostController::class, 'firstOrCreate']);
-Route::get('/posts/update_or_create', [PostController::class, 'updateOrCreate']);
+Route::group(['namespace' => '\App\Http\Controllers\Post\\'], function () {
+    Route::get('/posts/', 'IndexController')->name('posts');
+    Route::get('/posts/{post_id}', 'ShowController')->name('postShow')->where('post_id', '^[0-9]+$');
+    Route::get('/posts/{post_id}/edit/', 'EditController')->name('postEdit')->where('post_id', '^[0-9]+$');
+    Route::post('/posts/', 'StoreController')->name('postStore');
+    Route::patch('/posts/{post_id}', 'UpdateController')->name('postUpdate');
+    Route::delete('/posts/{post_id}/delete', 'DestroyController')->name('postDelete');
+    Route::get('/posts/create/', 'CreateController')->name('postCreate');
+});
+
+// How it could be realized another way
+//Route::get('/posts/', [\App\Http\Controllers\Post\IndexController::class, '__invoke'])->name('posts');
+//Route::get('/posts/{post_id}', [\App\Http\Controllers\Post\ShowController::class, '__invoke'])->name('postShow')->where('post_id', '^[0-9]+$');
+//Route::get('/posts/{post_id}/edit/', [\App\Http\Controllers\Post\EditController::class, '__invoke'])->name('postEdit')->where('post_id', '^[0-9]+$');
+//Route::post('/posts/', [\App\Http\Controllers\Post\StoreController::class, '__invoke'])->name('postStore');
+//Route::patch('/posts/{post_id}', [\App\Http\Controllers\Post\UpdateController::class, '__invoke'])->name('postUpdate');
+//Route::delete('/posts/{post_id}/delete', [\App\Http\Controllers\Post\DestroyController::class, '__invoke'])->name('postDelete');
+//Route::get('/posts/create/', [\App\Http\Controllers\Post\CreateController::class, '__invoke'])->name('postCreate');
+
 
 //Auth::routes();
 
