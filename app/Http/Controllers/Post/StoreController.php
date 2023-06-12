@@ -3,24 +3,16 @@
 namespace App\Http\Controllers\Post;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Post\StoreRequest;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
 
 class StoreController extends Controller
 {
-    public function __invoke()
+    public function __invoke(StoreRequest $request)
     {
-        $data = request()->validate([
-            'id' => 'numeric|nullable',
-            'title' => 'string',
-            'content' => 'string',
-            'image' => 'string|nullable',
-            'likes' => 'numeric|nullable',
-            'is_published' => 'boolean|nullable',
-            'category_id' => 'numeric|nullable',
-            'tags' => '',
-        ]);
+        $data = $request->validated();
         if (isset($data['tags'])) {
             $tags = $data['tags'];
         }
