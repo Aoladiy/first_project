@@ -20,7 +20,7 @@ return new class extends Migration
             $table->boolean('is_published')->default(0);
             $table->timestamps();
 
-            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('category_id')->nullable();
 
             $table->softDeletes();
         });
